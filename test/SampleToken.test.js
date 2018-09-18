@@ -1,13 +1,12 @@
 const { expectThrow } = require("../helpers/expectThrow");
 const { EVMRevert } = require("../helpers/EVMRevert");
-
-const SampleToken = artifacts.require("SampleToken");
-
 const BigNumber = web3.BigNumber;
 
 require("chai")
   .use(require("chai-bignumber")(BigNumber))
   .should();
+
+const SampleToken = artifacts.require("SampleToken");
 
 contract("SampleToken", function([_, owner, investor]) {
   let token;
