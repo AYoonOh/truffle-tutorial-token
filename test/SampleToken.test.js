@@ -23,28 +23,28 @@ contract("SampleToken", function([_, owner, investor]) {
     });
   });
 
-  describe("[테스트케이스 1 : 스마트컨트랙트가 선언된 변수에 맞게 정확히 생성되었는지 점검]", () => {
-    it("1.1. 토큰 이름은 지정한 이름으로 생성되었는가?", async function() {
+  describe("[Testcase 1 : check if the smart contract has been created as set in the variables]", () => {
+    it("1.1. Is the token name the same as set in the variable?", async function() {
       (await token.name()).should.eq(_name);
     });
 
-    it("1.2. 토큰 심볼은 지정한 심볼로 생성되었는가?", async function() {
+    it("1.2. Is the token symbol is the same as set in the variable?", async function() {
       (await token.symbol()).should.eq(_symbol);
     });
 
-    it("1.3. 토큰 decimals은 지정한 decimals로 생성되었는가?", async function() {
+    it("1.3. Is the token decimals is the same as set in the variable?", async function() {
       (await token.decimals()).should.be.bignumber.equal(_decimals);
     });
 
-    it("1.4. 토큰 총발행양은 지정한 total supply에 맞게 생성되었는가?", async function() {
+    it("1.4. Is the total supply of the token the same as set in the variable total supply?", async function() {
       (await token.totalSupply()).should.be.bignumber.equal(
         1000000000000000000000000
       );
     });
   });
 
-  describe("[테스트케이스 2 : 토큰 총발행양이 owner에게 제대로 transfer 되었는지 점검]", () => {
-    it("2.1. 발행된 전체 토큰양과 owner가 가지고 있는 토큰 balance가 동일한가?", async function() {
+  describe("[Testcase 2 : check if the amount of the token supply has been transffered to the token owner]", () => {
+    it("2.1. Is the total token amount issued are the same as that of the balance of the token owner?", async function() {
       const totalSupply = await token.totalSupply();
       const ownerBalance = await token.balanceOf(owner);
 
@@ -52,17 +52,19 @@ contract("SampleToken", function([_, owner, investor]) {
     });
   });
 
-  describe("[테스트케이스 3: 구현된 기능이 제대로 동작하는지 점검]", () => {
-    it("3.1. transfer 기능 점검 : 특정 address로 토큰 전송(transfer) 실행 후, 해당 address가 가지고 있는 토큰 balance가 전송된 토큰양과 일치 하는가?", async function() {
+  describe("[Testcase 3: check if the features implemented work as intended]", () => {
+    it("3.1. Transfer feature: after transferring some tokens to a certain address, is the amount of the token transferred the same as that of the address that has received?", async function() {
       await token.transfer(investor, 1000, { from: owner });
 
       const investorBalance = await token.balanceOf(investor);
       investorBalance.should.be.bignumber.equal(1000);
     });
 
-    it("3.2. 토큰 총발행양보다 더 많은 토큰을 전송하려고 할때, revert가 되는가?", async function() {
+    it("3.2. When trying to transferring more tokens than the token supply, is it properly ‘reverted’? ", async function() {
       await expectThrow(
-        token.transfer(investor, _over_total_supply, { from: owner }),
+        token.transfer(investor, _over_total_supply, {
+          from: owner
+        }),
         EVMRevert
       );
     });
